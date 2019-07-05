@@ -169,6 +169,9 @@ resource "aws_iam_role" "ci" {
   force_detach_policies = "true"
   max_session_duration  = "43200"
 
+  tags = {
+    "Name" = "ecb-terraform-aws-0e3"
+  }
   # tags = "${merge(var.role_tags, map(
   #   "Name", var.role_name,
   #   "Environment", var.environment,
