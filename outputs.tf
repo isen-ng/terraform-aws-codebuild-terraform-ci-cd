@@ -28,7 +28,7 @@ output "ci_buildspec" {
 
 output "ci_role_name" {
   #value       = "${module.ci_codebuild_role.role_name}"
-  value = "${aws_iam_role.ci.arn}"
+  value = "${aws_iam_role.ci.name}"
   description = "CI project's IAM role name"
 }
 
