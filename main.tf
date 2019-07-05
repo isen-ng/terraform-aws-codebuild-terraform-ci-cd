@@ -119,7 +119,8 @@ resource "aws_s3_bucket" "artifact" {
 resource "aws_codebuild_project" "ci" {
   name          = "${local.name}-ci"
   description   = "Build project on ${var.product_domain} infra repository which run Terraform CI"
-  service_role  = "${module.ci_codebuild_role.role_arn}"
+  # service_role  = "${module.ci_codebuild_role.role_arn}"
+  service_role  = "${aws_iam_role.ci.role_arn}"
   build_timeout = "60"
 
   artifacts {
@@ -148,19 +149,48 @@ resource "aws_codebuild_project" "ci" {
   }
 }
 
-module "ci_codebuild_role" {
-  source = "github.com/traveloka/terraform-aws-iam-role.git//modules/service?ref=v1.0.1"
+data "aws_iam_policy_document" "ci" {
+  statement = {
+    actions = ["sts:AssumeRole"]
 
-  environment    = "${var.environment}"
-  product_domain = "${var.product_domain}"
-
-  role_identifier            = "${local.name}"
-  role_description           = "Service Role for ${local.name}"
-  role_force_detach_policies = true
-  role_max_session_duration  = 43200
-
-  aws_service = "codebuild.amazonaws.com"
+    principals = {
+      type        = "Service"
+      identifiers = ["codebuild.amazonaws.com"]
+    }
+  }
 }
+
+resource "aws_iam_role" "ci" {
+  name        = "ecb-terraform-aws-0e3"
+  path        = "/service-role/codebuild.amazonaws.com/"
+  description = "LimPei's role"
+
+  assume_role_policy    = "${data.aws_iam_policy_document.ci.json}"
+  force_detach_policies = "true"
+  max_session_duration  = "43200"
+
+  # tags = "${merge(var.role_tags, map(
+  #   "Name", var.role_name,
+  #   "Environment", var.environment,
+  #   "ProductDomain", var.product_domain,
+  #   "Description", var.role_description,
+  #   "ManagedBy", "terraform",
+  #    ))}"
+}
+
+# module "ci_codebuild_role" {
+#   source = "github.com/traveloka/terraform-aws-iam-role.git//modules/service?ref=v1.0.1"
+
+#   environment    = "${var.environment}"
+#   product_domain = "${var.product_domain}"
+
+#   role_identifier            = "${local.name}"
+#   role_description           = "Service Role for ${local.name}"
+#   role_force_detach_policies = true
+#   role_max_session_duration  = 43200
+
+#   aws_service = "codebuild.amazonaws.com"
+# }
 
 resource "aws_codebuild_webhook" "ci" {
   project_name = "${aws_codebuild_project.ci.name}"
