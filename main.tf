@@ -211,13 +211,16 @@ resource "aws_codebuild_webhook" "ci" {
 }
 
 resource "aws_iam_role_policy" "ci_main" {
-  name   = "${module.ci_codebuild_role.role_name}-main"
-  role   = "${module.ci_codebuild_role.role_name}"
+  # name   = "${module.ci_codebuild_role.role_name}-main"
+  # role   = "${module.ci_codebuild_role.role_name}"
+  name   = "${aws_iam_role.ci.role_name}-main"
+  role   = "${aws_iam_role.ci.role_name}"
   policy = "${data.aws_iam_policy_document.this.json}"
 }
 
 resource "aws_iam_role_policy_attachment" "ci_administrator_access" {
-  role       = "${module.ci_codebuild_role.role_name}"
+  #role       = "${module.ci_codebuild_role.role_name}"
+  role       = "${aws_iam_role.ci.role_name}"
   policy_arn = "arn:aws:iam::aws:policy/AdministratorAccess"
 }
 
