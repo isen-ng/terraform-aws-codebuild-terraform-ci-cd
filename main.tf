@@ -178,19 +178,19 @@ resource "aws_iam_role" "ci" {
   #    ))}"
 }
 
-# module "ci_codebuild_role" {
-#   source = "github.com/traveloka/terraform-aws-iam-role.git//modules/service?ref=v1.0.1"
+module "ci_codebuild_role" {
+  source = "github.com/traveloka/terraform-aws-iam-role.git//modules/service?ref=v1.0.1"
 
-#   environment    = "${var.environment}"
-#   product_domain = "${var.product_domain}"
+  environment    = "${var.environment}"
+  product_domain = "${var.product_domain}"
 
-#   role_identifier            = "${local.name}"
-#   role_description           = "Service Role for ${local.name}"
-#   role_force_detach_policies = true
-#   role_max_session_duration  = 43200
+  role_identifier            = "${local.name}"
+  role_description           = "Service Role for ${local.name}"
+  role_force_detach_policies = true
+  role_max_session_duration  = 43200
 
-#   aws_service = "codebuild.amazonaws.com"
-# }
+  aws_service = "codebuild.amazonaws.com"
+}
 
 resource "aws_codebuild_webhook" "ci" {
   project_name = "${aws_codebuild_project.ci.name}"
