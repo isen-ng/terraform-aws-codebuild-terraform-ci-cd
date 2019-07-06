@@ -119,8 +119,7 @@ resource "aws_s3_bucket" "artifact" {
 resource "aws_codebuild_project" "ci" {
   name          = "${local.name}-ci"
   description   = "Build project on ${var.product_domain} infra repository which run Terraform CI"
-  # service_role  = "${module.ci_codebuild_role.role_arn}"
-  service_role  = "${aws_iam_role.ci.arn}"
+  service_role  = "${module.ci_codebuild_role.role_arn}"
   build_timeout = "60"
 
   artifacts {
