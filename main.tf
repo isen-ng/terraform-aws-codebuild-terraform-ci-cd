@@ -149,40 +149,9 @@ resource "aws_codebuild_project" "ci" {
   }
 }
 
-data "aws_iam_policy_document" "ci" {
-  statement = {
-    actions = ["sts:AssumeRole"]
-
-    principals = {
-      type        = "Service"
-      identifiers = ["codebuild.amazonaws.com"]
-    }
-  }
-}
-
-resource "aws_iam_role" "ci" {
-  name        = "ecb-terraform-aws-0e3"
-  path        = "/service-role/codebuild.amazonaws.com/"
-  description = "LimPei's role"
-
-  assume_role_policy    = "${data.aws_iam_policy_document.ci.json}"
-  force_detach_policies = "true"
-  max_session_duration  = "43200"
-
-  tags = {
-    "Name" = "ecb-terraform-aws-0e3"
-  }
-  # tags = "${merge(var.role_tags, map(
-  #   "Name", var.role_name,
-  #   "Environment", var.environment,
-  #   "ProductDomain", var.product_domain,
-  #   "Description", var.role_description,
-  #   "ManagedBy", "terraform",
-  #    ))}"
-}
-
 module "ci_codebuild_role" {
-  source = "github.com/traveloka/terraform-aws-iam-role.git//modules/service?ref=v1.0.1"
+  #source = "github.com/traveloka/terraform-aws-iam-role.git//modules/service?ref=v1.0.1"
+  source = "github.com/isen-ng/terraform-aws-iam-role.git//modules/service?ref=feature/role-name-path-64"
 
   environment    = "${var.environment}"
   product_domain = "${var.product_domain}"
@@ -214,16 +183,13 @@ resource "aws_codebuild_webhook" "ci" {
 }
 
 resource "aws_iam_role_policy" "ci_main" {
-  # name   = "${module.ci_codebuild_role.role_name}-main"
-  # role   = "${module.ci_codebuild_role.role_name}"
-  name   = "${aws_iam_role.ci.name}-main"
-  role   = "${aws_iam_role.ci.name}"
+  name   = "${module.ci_codebuild_role.role_name}-main"
+  role   = "${module.ci_codebuild_role.role_name}"
   policy = "${data.aws_iam_policy_document.this.json}"
 }
 
 resource "aws_iam_role_policy_attachment" "ci_administrator_access" {
-  #role       = "${module.ci_codebuild_role.role_name}"
-  role       = "${aws_iam_role.ci.name}"
+  role       = "${module.ci_codebuild_role.role_name}"
   policy_arn = "arn:aws:iam::aws:policy/AdministratorAccess"
 }
 
@@ -263,7 +229,8 @@ resource "aws_codebuild_project" "cd" {
 }
 
 module "cd_codebuild_role" {
-  source = "github.com/traveloka/terraform-aws-iam-role.git//modules/service?ref=v1.0.1"
+  #source = "github.com/traveloka/terraform-aws-iam-role.git//modules/service?ref=v1.0.1"
+  source = "github.com/isen-ng/terraform-aws-iam-role.git//modules/service?ref=feature/role-name-path-64"
 
   environment    = "${var.environment}"
   product_domain = "${var.product_domain}"
