@@ -30,6 +30,19 @@ variable "image" {
   description = "Docker image used by CodeBuild"
 }
 
+variable "image_pull_credentials_type" {
+  type        = "string"
+  default     = "CODEBUILD"
+  description = "The type of credentials AWS CodeBuild uses to pull images in your build"
+}
+
+variable "image_pull_credentials_secret_manager_arn" {
+  type        = "string"
+  default     = ""
+  description = "ARN to the secret in the AWS secret manage if image_pull_credentials_type is SERVICE_ROLE"
+}
+
+
 variable "github_app_id" {
   type        = "string"
   default     = "18429"

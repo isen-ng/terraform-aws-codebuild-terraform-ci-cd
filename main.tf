@@ -127,11 +127,17 @@ resource "aws_codebuild_project" "ci" {
   }
 
   environment {
-    compute_type = "${var.compute_type}"
-    image        = "${var.image}"
-    type         = "LINUX_CONTAINER"
+    compute_type                = "${var.compute_type}"
+    image                       = "${var.image}"
+    type                        = "LINUX_CONTAINER"
+    image_pull_credentials_type = "${var.image_pull_credentials_type}"
 
     environment_variable = "${var.ci_env_var}"
+  }
+
+  registry_credential {
+    credential          = "${var.image_pull_credentials_secret_manager_arn}"
+    credential_provider = "SECRETS_MANAGER"
   }
 
   source {
@@ -155,7 +161,7 @@ module "ci_codebuild_role" {
   product_domain = "${var.product_domain}"
 
   role_identifier            = "${local.name}"
-  role_description           = "Service Role for ${local.name}"
+  role_description           = "Service Role for ${local.name} CI"
   role_force_detach_policies = true
   role_max_session_duration  = 43200
 
@@ -205,11 +211,17 @@ resource "aws_codebuild_project" "cd" {
   }
 
   environment {
-    compute_type = "${var.compute_type}"
-    image        = "${var.image}"
-    type         = "LINUX_CONTAINER"
+    compute_type                = "${var.compute_type}"
+    image                       = "${var.image}"
+    type                        = "LINUX_CONTAINER"
+    image_pull_credentials_type = "${var.image_pull_credentials_type}"
 
     environment_variable = "${var.cd_env_var}"
+  }
+
+  registry_credential {
+    credential          = "${var.image_pull_credentials_secret_manager_arn}"
+    credential_provider = "SECRETS_MANAGER"
   }
 
   source {
@@ -233,7 +245,7 @@ module "cd_codebuild_role" {
   product_domain = "${var.product_domain}"
 
   role_identifier            = "${local.name}"
-  role_description           = "Service Role for ${local.name}"
+  role_description           = "Service Role for ${local.name} CD"
   role_force_detach_policies = true
   role_max_session_duration  = 43200
 
