@@ -38,7 +38,7 @@ variable "image_pull_credentials_type" {
 
 variable "image_pull_credentials_arn" {
   type        = "string"
-  default     = ""
+  default     = "NOT_USED"
   description = "ARN to the secret in the AWS secret manage if image_pull_credentials_type is SERVICE_ROLE"
 }
 
