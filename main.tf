@@ -136,7 +136,7 @@ resource "aws_codebuild_project" "ci" {
 
     registry_credential = {
       credential          = "${var.image_pull_credentials_secret_manager_arn}"
-      credential_provider = "SECRETS_MANAGER"
+      credential_provider = "${var.image_pull_credentials_secret_manager_arn == "" ? "" : "SECRETS_MANAGER"}"
     }
   }
 
@@ -220,7 +220,7 @@ resource "aws_codebuild_project" "cd" {
 
     registry_credential {
       credential          = "${var.image_pull_credentials_secret_manager_arn}"
-      credential_provider = "SECRETS_MANAGER"
+      credential_provider = "${var.image_pull_credentials_secret_manager_arn == "" ? "" : "SECRETS_MANAGER"}"
     }
   }
 
