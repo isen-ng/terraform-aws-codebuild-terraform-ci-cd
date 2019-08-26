@@ -36,11 +36,17 @@ variable "image_pull_credentials_type" {
   description = "The type of credentials AWS CodeBuild uses to pull images in your build"
 }
 
-variable "registry_credential" {
-  type        = "list"
-  default     = []
-  description = "registry_credential to use if image_pull_credentials_type is SERVICE_ROLE"
+variable "image_pull_credentials_arn" {
+  type        = "string"
+  default     = ""
+  description = "ARN to the secret in the AWS secret manage if image_pull_credentials_type is SERVICE_ROLE"
 }
+
+# variable "registry_credential" {
+#   type        = "list"
+#   default     = []
+#   description = "registry_credential to use if image_pull_credentials_type is SERVICE_ROLE"
+# }
 
 variable "github_app_id" {
   type        = "string"

@@ -1,6 +1,11 @@
 locals {
   name = "${var.product_domain}-terraform-aws"
 
+  registry_credential = "${var.image_pull_credentials_arn == "" ? [] : 
+    merge(
+      map("credential", var.image_pull_credentials_arn), 
+      map("credential_provider", "SECRETS_MANAGER"))}"
+
   #############
   # CI LOCALS #
   #############
@@ -133,7 +138,7 @@ resource "aws_codebuild_project" "ci" {
     image_pull_credentials_type = "${var.image_pull_credentials_type}"
 
     environment_variable = ["${var.ci_env_var}"]
-    registry_credential  = ["${var.registry_credential}"]
+    registry_credential  = ["${local.registry_credential}"]
   }
 
   source {
@@ -213,7 +218,7 @@ resource "aws_codebuild_project" "cd" {
     image_pull_credentials_type = "${var.image_pull_credentials_type}"
 
     environment_variable = ["${var.cd_env_var}"]
-    registry_credential  = ["${var.registry_credential}"]
+    registry_credential  = ["${local.registry_credential}"]
   }
 
   source {
