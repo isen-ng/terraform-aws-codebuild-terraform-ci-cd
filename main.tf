@@ -133,7 +133,7 @@ resource "aws_codebuild_project" "ci" {
     image_pull_credentials_type = "${var.image_pull_credentials_type}"
 
     environment_variable = "${var.ci_env_var}"
-    registry_credential  = "${var.registry_credential}"
+    registry_credential  = ["${var.registry_credential}"]
   }
 
   source {
@@ -213,7 +213,7 @@ resource "aws_codebuild_project" "cd" {
     image_pull_credentials_type = "${var.image_pull_credentials_type}"
 
     environment_variable = "${var.cd_env_var}"
-    registry_credential  = "${var.registry_credential}"
+    registry_credential  = ["${var.registry_credential}"]
   }
 
   source {
