@@ -37,8 +37,8 @@ variable "image_pull_credentials_type" {
 }
 
 variable "registry_credential" {
-  type        = "map"
-  default     = {}
+  type        = "list"
+  default     = []
   description = "registry_credential to use if image_pull_credentials_type is SERVICE_ROLE"
 }
 
