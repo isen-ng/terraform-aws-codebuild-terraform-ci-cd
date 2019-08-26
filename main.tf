@@ -1,7 +1,7 @@
 locals {
   name = "${var.product_domain}-terraform-aws"
 
-  registry_credential = "${var.image_pull_credentials_arn == "" ? [] : 
+  registry_credential = "${var.image_pull_credentials_arn == "" ? map() : 
     merge(
       map("credential", var.image_pull_credentials_arn), 
       map("credential_provider", "SECRETS_MANAGER"))}"
