@@ -219,7 +219,7 @@ resource "aws_codebuild_project" "cd" {
     registry_credential  = {
       credential = "${var.image_pull_credentials_arn}"
       credential_provider = "SECRETS_MANAGER"
-    
+    }
   }
 
   source {
